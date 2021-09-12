@@ -1,0 +1,24 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NASA Images</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="main.min.js" defer></script>
+</head>
+<body class="bg-gray-900 min-h-screen text-gray-50">
+    <header class="relative flex flex-nowrap sticky top-0 inset-x-0 bg-gray-800 shadow-lg min-h-[3rem] border-b border-gray-700 py-4 px-8 z-100">
+        <h1 class="text-2xl">NASA Images</h1>
+    </header>
+    <main x-data="nasaMain" class="w-full flex flex-col gap-y-2 py-2">
+        <template x-for="(photo,index) in collection" :key="photo.title">
+            <photo-card class="flex flex-col gap-y-2 bg-gray-700 border border-gray-600 shadow-md p-8 mx-4">
+                <img :src="photo.url" class="rounded-xl max-h-[12rem] object-cover w-full transition-all duration-1000" :alt="photo.title" @click="$el.classList.add('!max-h-[100vw]')" :loading="index>=3?'lazy':'eager'" width="3px" height="2px">
+                <button class="max-w-1/2 mx-auto" @click="$store.favourites.toggle(photo)" x-text="$store.favourites.collection.some(i=>i.title==photo.title)?'unlike':'like'">like</button>
+            </photo-card>
+        </template>
+        <button @click="collection.push(...(await Kwoka.fetchAPOD(10)))" class="bg-gray-100 text-gray-900 px-4 py-2 rounded mx-4">Load More</button>
+    </main>
+</body>
+</html>
