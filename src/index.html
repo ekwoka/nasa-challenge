@@ -12,7 +12,7 @@
         <h1 class="text-2xl flex-auto" @click="collection=[];init();page='main'">NASA Images</h1>
         <button class="relative hover:text-pink-700" @click="page='favourites';collection=[...$store.favourites.collection]">
             <div class="absolute top-0 -right-2 w-4 h-4 rounded-full bg-gray-50 text-gray-900 align-bottom flex justify-center items-center text-sm animate-bubble-ping" x-text="$store.favourites.collection.length" x-show="$store.favourites.collection.length!=0" x-transition.opacity></div>
-            <svg class="icon flex-none transition-colors duration-300">
+            <svg class="icon flex-none transition-colors duration-300" :class="page=='favourites'?'text-pink-700':''">
                 <use :href="$store.favourites.collection.length==0?'#icon-heart-outline':'#icon-heart'"></use>
             </svg>
         </button>
