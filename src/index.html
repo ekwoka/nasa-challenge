@@ -3,6 +3,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Accept-CH" content="DPR, Viewport-Width, Width">
     <title>NASA Images</title>
     <link rel="stylesheet" href="style.css">
     <script src="main.min.js" defer></script>
@@ -26,7 +27,7 @@
     <main class="w-full flex flex-col gap-y-2 py-2">
         <template x-for="(photo,index) in collection" :key="photo.title">
             <photo-card class="flex flex-col gap-y-2 bg-gray-700 border border-gray-600 shadow-md p-8 mx-4">
-                <img :src="photo.url" class="rounded-xl object-cover w-full transition-all duration-300" alt="" :alt="photo.title" @click="photo.expanded=!photo.expanded;photo.url=photo.hdurl" :class="photo.expanded?'max-h-[100vw]':'max-h-48 md:max-h-80 lg:max-h-[30rem]'" :loading="index>=3?'lazy':'eager'" width="3px" height="2px">
+                <img x-rias="photo.hdurl" class="rounded-xl object-cover w-full transition-all duration-300" alt="" :alt="photo.title" @click="photo.expanded=!photo.expanded" :class="photo.expanded?'max-h-[100vw]':'max-h-48 md:max-h-80 lg:max-h-[30rem]'" :loading="index>=3?'lazy':'eager'" width="3px" height="2px" sizes="90vw">
                 <div class="flex flex-row justify-between items-center">
                     <h3 class="text-xl" x-text="photo.title"></h3>
                     <button class="max-w-1/2 border-gray-50 border rounded-md px-2 py-1 inline-flex items-center gap-x-1 transition duration-700" @click="$store.favourites.toggle(photo)" :class="isLiked(photo)?'bg-gray-50 text-gray-900':'bg-transparent text-gray-50'"">
