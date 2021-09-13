@@ -58,6 +58,7 @@ module.exports = {
       keyframes: {
         bubble: {
           '0%': { opacity: '0', transform: 'scale(1)'},
+          '20%': { opacity: '1'},
           '50%': { opacity: '0', transform: 'scale(2)'},
           '51%': { opacity: '0', transform: 'scale(0)'},
           '85%': { opacity: '1', transform: 'scale(1)'}
