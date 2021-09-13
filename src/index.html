@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="style.css">
     <script src="main.min.js" defer></script>
 </head>
-<body class="bg-gray-900 min-h-screen text-gray-50" x-data="nasaMain">
+<body class="bg-truegray-900 min-h-screen text-gray-50" x-data="nasaMain">
     <header class="relative flex flex-nowrap sticky top-0 inset-x-0 bg-gray-800 shadow-lg min-h-[3rem] border-b border-gray-700 py-4 px-8 z-100 gap-x-8">
         <button class="text-2xl flex-auto text-left" @click="collection=[];init();page='main'">NASA Images</button>
         <button class="relative hover:text-pink-700" @click="page='favourites';collection=[...$store.favourites.collection]">
@@ -25,6 +25,10 @@
 
     </header>
     <main class="w-full flex flex-col gap-y-2 py-2">
+        <hero-space class="block prose-2xl relative py-16 px-8">
+            <h2 class="mx-auto text-center font-bold bg-gradient-to-tr from-blue-500 to bg-indigo-300 text-transparent bg-clip-text">NASA Images API Browser</h2>
+            <p class="text-center">Explore the final frontier! Powered by AlpineJS and TailwindCSS</p>
+        </hero-space>
         <template x-for="(photo,index) in collection" :key="photo.title">
             <photo-card class="flex flex-col gap-y-2 bg-gray-700 border border-gray-600 shadow-md p-8 mx-4">
                 <img x-rias="photo.hdurl" class="rounded-xl object-cover w-full transition-all duration-300" alt="" :alt="photo.title" @click="photo.expanded=!photo.expanded" :class="photo.expanded?'max-h-[100vw]':'max-h-48 md:max-h-80 lg:max-h-[30rem]'" :loading="index>=3?'lazy':'eager'" width="3px" height="2px" sizes="90vw">
