@@ -7,18 +7,55 @@
     <link rel="stylesheet" href="style.css">
     <script src="main.min.js" defer></script>
 </head>
-<body class="bg-gray-900 min-h-screen text-gray-50">
-    <header class="relative flex flex-nowrap sticky top-0 inset-x-0 bg-gray-800 shadow-lg min-h-[3rem] border-b border-gray-700 py-4 px-8 z-100">
-        <h1 class="text-2xl">NASA Images</h1>
+<body class="bg-gray-900 min-h-screen text-gray-50" x-data="nasaMain">
+    <header class="relative flex flex-nowrap sticky top-0 inset-x-0 bg-gray-800 shadow-lg min-h-[3rem] border-b border-gray-700 py-4 px-8 z-100 gap-x-4">
+        <h1 class="text-2xl flex-auto" @click="collection=[];init();page='main'">NASA Images</h1>
+        <button class="relative hover:text-pink-700" @click="page='favourites';collection=[...$store.favourites.collection]">
+            <div class="absolute top-0 -right-2 w-4 h-4 rounded-full bg-gray-50 text-gray-900 align-bottom flex justify-center items-center text-sm animate-bubble-ping" x-text="$store.favourites.collection.length" x-show="$store.favourites.collection.length!=0" x-transition.opacity></div>
+            <svg class="icon flex-none transition-colors duration-300">
+                <use :href="$store.favourites.collection.length==0?'#icon-heart-outline':'#icon-heart'"></use>
+            </svg>
+        </button>
+        <svg class="icon flex-none">
+            <use href="#icon-menu"></use>
+        </svg>
+
     </header>
-    <main x-data="nasaMain" class="w-full flex flex-col gap-y-2 py-2">
+    <main class="w-full flex flex-col gap-y-2 py-2">
         <template x-for="(photo,index) in collection" :key="photo.title">
             <photo-card class="flex flex-col gap-y-2 bg-gray-700 border border-gray-600 shadow-md p-8 mx-4">
-                <img :src="photo.url" class="rounded-xl max-h-[12rem] object-cover w-full transition-all duration-1000" :alt="photo.title" @click="$el.classList.add('!max-h-[100vw]')" :loading="index>=3?'lazy':'eager'" width="3px" height="2px">
-                <button class="max-w-1/2 mx-auto" @click="$store.favourites.toggle(photo)" x-text="$store.favourites.collection.some(i=>i.title==photo.title)?'unlike':'like'">like</button>
+                <img :src="photo.url" class="rounded-xl object-cover w-full transition-all duration-300" alt="" :alt="photo.title" @click="photo.expanded=!photo.expanded;photo.url=photo.hdurl" :class="photo.expanded?'max-h-[100vw]':'max-h-48 md:max-h-80 lg:max-h-[30rem]'" :loading="index>=3?'lazy':'eager'" width="3px" height="2px">
+                <div class="flex flex-row justify-between items-center">
+                    <h3 class="text-xl" x-text="photo.title"></h3>
+                    <button class="max-w-1/2 border-gray-50 border rounded-md px-2 py-1 inline-flex items-center gap-x-1 transition duration-700" @click="$store.favourites.toggle(photo)" :class="isLiked(photo)?'bg-gray-50 text-gray-900':'bg-transparent text-gray-50'"">
+                        <svg class="icon h-4 w-4 flex-none transition-colors duration-700" :class="isLiked(photo)?'text-pink-700':'text-gray-50'">
+                            <use :href="isLiked(photo)?'#icon-heart':'#icon-heart-outline'"></use>
+                        </svg>
+                        <span x-text="isLiked(photo)?'liked':'like'">like</span>
+                    </button>
+
+                </div>
             </photo-card>
         </template>
-        <button @click="collection.push(...(await Kwoka.fetchAPOD(10)))" class="bg-gray-100 text-gray-900 px-4 py-2 rounded mx-4">Load More</button>
+        <button x-intersect.half="loadMore" class="bg-gray-100 text-gray-900 px-4 py-2 rounded mx-4" x-show="page=='main'" x-cloak x-text="loading?'loading...':'Load More'">Load More</button>
     </main>
+    <footer></footer>
+
+    <svg aria-hidden="true" style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <defs>
+            <symbol id="icon-heart-outline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            </symbol>
+            <symbol id="icon-heart" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" />
+            </symbol>
+            <symbol id="icon-error" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+            </symbol>
+            <symbol id="icon-menu" viewBox="0 0 24 24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
+            </symbol>
+        </defs>
+    </svg>
 </body>
 </html>
