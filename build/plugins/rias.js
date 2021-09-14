@@ -3,7 +3,6 @@ import { mutateDom } from '../../node_modules/alpinejs/src/mutation.js'
 
 export default function(Alpine){
     const cloudURL = 'https://res.cloudinary.com/dmaoqyvwt/image/fetch/f_auto,q_80,w_{width}/'
-    console.log('Registering RIAS')
     Alpine.directive('rias', (el, { expression }, { effect, evaluateLater }) => {
         let evaluate = evaluateLater(expression)
     
