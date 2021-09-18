@@ -11,6 +11,7 @@ export default function(Alpine){
         },
         async loadMain(){
             this.loading=true
+            this.collection=[]
             this.collection = await Kwoka.fetchAPOD()
             this.favouritesCollection=[...this.$store.favourites.collection]
             setTimeout(()=>this.loading=false,400)
