@@ -5,7 +5,6 @@ export default function(Alpine){
         collection: [],
         favouritesCollection: [],
         async init(){
-
             if(window.location.pathname.length>=2) this.page=window.location.pathname.substring(1)
             if(this.page=='main') this.loadMain()
         },
@@ -30,7 +29,7 @@ export default function(Alpine){
         changePage(title){
             this.loading=true
             if(title=='favourites') this.favouritesCollection=[...this.$store.favourites.collection]
-            if(title=='main') this.favouritesCollection=[...this.$store.favourites.collection]
+            if(title=='main') this.loadMain()
             this.page=title
             history.pushState(null,title,`${window.location.origin}/${title}`)
             setTimeout(()=>this.loading=false,400)
