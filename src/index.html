@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Accept-CH" content="DPR, Viewport-Width, Width">
     <title>NASA Images</title>
-    <link rel="stylesheet" href="/style.css">
-    <script src="/main.min.js" defer></script>
+    <link rel="stylesheet" href="./style.css" type="text/css">
+    <script src="./main.min.js" type="text/javascript" defer></script>
 </head>
 <body class="min-h-screen bg-truegray-900 text-gray-50" x-data="nasaMain">
-    <header class="relative flex flex-nowrap sticky top-0 inset-x-0 bg-gray-800 shadow-lg min-h-[3rem] border-b border-gray-700 py-4 px-8 gap-x-8 z-20">
-        <button class="flex-auto text-2xl text-left" @click="collection=[];init();page='main'">NASA Images</button>
-        <button class="relative hover:text-pink-700" @click="page='favourites';collection=[...$store.favourites.collection]">
+    <header class="flex flex-nowrap sticky top-0 inset-x-0 bg-gray-800 shadow-lg min-h-[3rem] border-b border-gray-700 py-4 px-8 gap-x-8 z-20">
+        <button class="flex-auto text-2xl text-left" @click="changePage('main')">NASA Images</button>
+        <button class="relative hover:text-pink-700" @click="changePage('favourites')">
             <div class="absolute top-0 flex items-center justify-center w-4 h-4 text-sm text-gray-900 align-bottom rounded-full -right-2 bg-gray-50 animate-bubble-ping" x-text="$store.favourites.collection.length" x-show="$store.favourites.collection.length!=0" x-transition.opacity></div>
             <svg class="flex-none transition-colors duration-300 icon" :class="page=='favourites'?'text-pink-700':''">
                 <use :href="$store.favourites.collection.length==0?'#icon-heart-outline':'#icon-heart'"></use>
@@ -25,26 +25,56 @@
 
     </header>
     <main class="flex flex-col w-full py-2 gap-y-2">
-        <hero-space class="relative block px-8 py-16 prose-2xl">
-            <h2 class="mx-auto font-bold text-center text-transparent bg-indigo-300 bg-gradient-to-tr from-blue-500 to bg-clip-text">NASA Images API Browser</h2>
-            <p class="text-center">Explore the final frontier! Powered by AlpineJS and TailwindCSS</p>
-        </hero-space>
-        <template x-for="(photo,index) in collection" :key="photo.title">
-            <photo-card class="flex flex-col p-8 mx-4 bg-gray-700 border border-gray-600 shadow-md gap-y-2">
-                <img x-rias="photo.hdurl" class="object-cover w-full transition-all duration-300 rounded-xl" alt="" :alt="photo.title" @click="photo.expanded=!photo.expanded" :class="photo.expanded?'max-h-[100vw]':'max-h-48 md:max-h-80 lg:max-h-[30rem]'" :loading="index>=3?'lazy':'eager'" width="3px" height="2px" sizes="90vw">
-                <div class="flex flex-row items-center justify-between">
-                    <h3 class="text-xl" x-text="photo.title"></h3>
-                    <button class="inline-flex items-center px-2 py-1 transition duration-700 border rounded-md max-w-1/2 border-gray-50 gap-x-1" @click="$store.favourites.toggle(photo)" :class="isLiked(photo)?'bg-gray-50 text-gray-900':'bg-transparent text-gray-50'"">
-                        <svg class="flex-none w-4 h-4 transition-colors duration-700 icon" :class="isLiked(photo)?'text-pink-700':'text-gray-50'">
-                            <use :href="isLiked(photo)?'#icon-heart':'#icon-heart-outline'"></use>
-                        </svg>
-                        <span x-text="isLiked(photo)?'liked':'like'">like</span>
-                    </button>
-
-                </div>
-            </photo-card>
+    <hero-space class="relative block px-8 py-16 prose-2xl" x-show="page=='main'">
+        <h2 class="mx-auto font-bold text-center text-transparent bg-indigo-300 bg-gradient-to-tr from-blue-500 to bg-clip-text">NASA Images API Browser</h2>
+        <p class="text-center">Explore the final frontier! Powered by AlpineJS and TailwindCSS</p>
+    </hero-space>
+    <h2 class="px-8 pt-8 text-lg font-bold capitalize" x-text="page" x-cloak x-show="page!='main'"></h2>
+        <template x-if="page=='main'">
+            <collection-wrapper class="flex flex-col w-full">
+                <template x-for="(photo,index) in collection" :key="photo.title">
+                    <photo-card class="relative flex flex-col py-8 shadow-md gap-y-2">
+                        <img x-rias="photo.hdurl" class="object-cover w-full" alt="" :alt="photo.title" :loading="index>=3?'lazy':'eager'" width="3px" height="2px" sizes="90vw" @error="collection.splice(index,1)">
+                        <div class="flex flex-row items-center justify-between px-8">
+                            <h3 class="text-xl" x-text="photo.title"></h3>
+                            <button class="inline-flex items-center px-2 py-1 transition duration-700 border rounded-md max-w-1/2 border-gray-50 gap-x-1" @click="$store.favourites.toggle(photo)" :class="isLiked(photo)?'bg-gray-50 text-gray-900':'bg-transparent text-gray-50'"">
+                                <svg class="flex-none w-4 h-4 transition-colors duration-700 icon" :class="isLiked(photo)?'text-pink-700':'text-gray-50'">
+                                    <use :href="isLiked(photo)?'#icon-heart':'#icon-heart-outline'"></use>
+                                </svg>
+                                <span x-text="isLiked(photo)?'liked':'like'">like</span>
+                            </button>
+                        </div>
+                        <photo-description class="block px-8 prose" @click="photo.expanded=true" x-text="photo.explanation" :class="photo.expanded?'':`line-clamp-2 after:content-[more]`">
+                        </photo-description>
+                        <span class="absolute text-sm bottom-2 left-8 text-gray-50/70" x-text="photo.date"></span>
+                        <span class="absolute text-sm bottom-2 right-8 text-gray-50/70" x-text="photo.copyright" x-show="photo.copyright"></span>
+                    </photo-card>
+                </template>
+                <button x-intersect.half="loadMore" class="px-4 py-2 mx-4 text-gray-900 bg-gray-100 rounded" x-cloak x-text="loading?'loading...':'Load More'">Load More</button>
+            </collection-wrapper>
         </template>
-        <button x-intersect.half="loadMore" class="px-4 py-2 mx-4 text-gray-900 bg-gray-100 rounded" x-show="page=='main'" x-cloak x-text="loading?'loading...':'Load More'">Load More</button>
+        <template x-if="page=='favourites'">
+            <favourites-wrapper class="flex flex-col w-full animate-slide-in-right">
+                <template x-for="(photo,index) in favouritesCollection" :key="photo.title">
+                    <photo-card class="relative flex flex-col py-8 shadow-md gap-y-2">
+                        <img x-rias="photo.hdurl" class="object-cover w-full" alt="" :alt="photo.title" :loading="index>=3?'lazy':'eager'" width="3px" height="2px" sizes="90vw" @error="collection.splice(index,1)">
+                        <div class="flex flex-row items-center justify-between px-8">
+                            <h3 class="text-xl" x-text="photo.title"></h3>
+                            <button class="inline-flex items-center px-2 py-1 transition duration-700 border rounded-md max-w-1/2 border-gray-50 gap-x-1" @click="$store.favourites.toggle(photo)" :class="isLiked(photo)?'bg-gray-50 text-gray-900':'bg-transparent text-gray-50'"">
+                                <svg class="flex-none w-4 h-4 transition-colors duration-700 icon" :class="isLiked(photo)?'text-pink-700':'text-gray-50'">
+                                    <use :href="isLiked(photo)?'#icon-heart':'#icon-heart-outline'"></use>
+                                </svg>
+                                <span x-text="isLiked(photo)?'liked':'like'">like</span>
+                            </button>
+                        </div>
+                        <photo-description class="block px-8 prose" @click="photo.expanded=true" x-text="photo.explanation" :class="photo.expanded?'':`line-clamp-2 after:content-[more]`">
+                        </photo-description>
+                        <span class="absolute text-sm bottom-2 left-8 text-gray-50/70" x-text="photo.date"></span>
+                        <span class="absolute text-sm bottom-2 right-8 text-gray-50/70" x-text="photo.copyright" x-show="photo.copyright"></span>
+                    </photo-card>
+                </template>
+            </favourites-wrapper>
+        </template>
     </main>
     <footer></footer>
 

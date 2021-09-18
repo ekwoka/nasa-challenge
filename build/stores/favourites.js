@@ -3,6 +3,8 @@ export default function(Alpine){
         collection:[],
         add(image){
             if (this.collection.some(i=>i.title==image.title)) return
+            image = {...image}
+            image.expanded=false
             this.collection.push(image)
         },
         remove(image){
@@ -12,6 +14,9 @@ export default function(Alpine){
             if (this.collection.some(i=>i.title==image.title)) return this.remove(image)
             return this.add(image)
 
+        },
+        init(){
+            this.collection.forEach(i=>i.expanded=false)
         }
     })
 }

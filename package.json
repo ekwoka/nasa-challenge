@@ -3,12 +3,14 @@
     "@tailwindcss/forms": "^0.3.3",
     "@tailwindcss/typography": "^0.4.1",
     "esbuild": "^0.12.28",
+    "lighthouse": "^8.4.0",
     "npm-run-all": "^4.1.5",
     "tailwindcss": "^2.2.15"
   },
   "dependencies": {
-    "@alpinejs/intersect": "^3.3.3",
-    "alpinejs": "^3.3.3"
+    "@alpinejs/intersect": "^3.3.4",
+    "@tailwindcss/line-clamp": "^0.2.1",
+    "alpinejs": "^3.3.4"
   },
   "scripts": {
     "build": "run-s build:*",
