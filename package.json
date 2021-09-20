@@ -15,9 +15,9 @@
   "scripts": {
     "build": "run-s build:*",
     "watch": "run-p watch:*",
-    "build:css": "tailwindcss -i ./build/tailwind.pre.css -o ./src/style.css --jit -m --purge {./src/index.html,./src/main.min.js} -c ./tailwind.config.js",
+    "build:css": "tailwindcss -i ./build/tailwind.pre.css -o ./src/style.css --jit -m --purge ./src/index.html -c ./tailwind.config.js",
     "build:js": "esbuild ./build/build.js --outfile=./src/main.min.js --platform=browser --target=es2017 --bundle --minify",
-    "watch:css": "tailwindcss -i ./build/tailwind.pre.css -o ./src/style.css --jit -w --purge {./src/index.html,./src/main.min.js} -c ./tailwind.config.js",
+    "watch:css": "tailwindcss -i ./build/tailwind.pre.css -o ./src/style.css --jit -w --purge ./src/index.html -c ./tailwind.config.js",
     "watch:js": "esbuild ./build/build.js --outfile=./src/main.min.js --platform=browser --target=es2017 --bundle --watch",
     "ngrok": "ngrok http 5500"
   }
