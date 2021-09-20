@@ -12,17 +12,18 @@
     <header class="flex flex-nowrap sticky top-0 inset-x-0 bg-gray-800 shadow-lg min-h-[3rem] border-b border-gray-700 py-4 px-8 gap-x-8 z-20">
         <button class="flex-auto text-2xl text-left" @click="changePage('main')">NASA Images</button>
         <button class="relative hover:text-pink-700" @click="changePage('favourites')">
-            <div class="absolute top-0 flex items-center justify-center w-4 h-4 text-sm text-gray-900 align-bottom rounded-full -right-2 bg-gray-50 animate-bubble-ping" x-text="$store.favourites.collection.length" x-show="$store.favourites.collection.length!=0" x-transition.opacity></div>
+            <div class="absolute top-0 flex items-center justify-center w-4 h-4 text-sm text-gray-900 align-bottom rounded-full -right-2 bg-gray-50 animate-bubble-ping" x-text="$store.favourites.collection.length" x-show="$store.favourites.collection.length!=0" x-transition.opacity x-cloak></div>
             <svg class="flex-none transition-colors duration-300 icon" :class="page=='favourites'?'text-pink-700':''">
                 <use :href="$store.favourites.collection.length==0?'#icon-heart-outline':'#icon-heart'"></use>
             </svg>
         </button>
-        <button class="relative" @click="">
+        <button class="relative hidden" @click="menuExpanded=!menuExpanded">
             <svg class="flex-none icon">
                 <use href="#icon-menu"></use>
             </svg>
         </button>
-
+        <main-nav class="fixed block" x-show="menuExpanded">
+        </main-nav>
     </header>
     <main class="flex flex-col w-full py-2 gap-y-2">
     <hero-space class="relative block px-8 py-16 prose-2xl" x-show="page=='main'">
@@ -37,7 +38,7 @@
                         <img x-rias="photo.hdurl" class="object-cover w-full" alt="" :alt="photo.title" :loading="index>=3?'lazy':'eager'" width="3px" height="2px" sizes="90vw" @error="collection.splice(index,1)">
                         <div class="flex flex-row items-center justify-between px-8">
                             <h3 class="text-xl" x-text="photo.title"></h3>
-                            <button class="inline-flex items-center px-2 py-1 transition duration-700 border rounded-md max-w-1/2 border-gray-50 gap-x-1" @click="$store.favourites.toggle(photo)" :class="isLiked(photo)?'bg-gray-50 text-gray-900':'bg-transparent text-gray-50'"">
+                            <button class="inline-flex items-center px-2 py-1 transition duration-700 border rounded-md max-w-1/2 border-gray-50 gap-x-1 focus-visible:bg-blue-300" @click="$store.favourites.toggle(photo)" :class="isLiked(photo)?'bg-gray-50 text-gray-900':'bg-transparent text-gray-50'"">
                                 <svg class="flex-none w-4 h-4 transition-colors duration-700 icon" :class="isLiked(photo)?'text-pink-700':'text-gray-50'">
                                     <use :href="isLiked(photo)?'#icon-heart':'#icon-heart-outline'"></use>
                                 </svg>
@@ -46,11 +47,12 @@
                         </div>
                         <photo-description class="block px-8 prose" @click="photo.expanded=true" x-text="photo.explanation" :class="photo.expanded?'':`line-clamp-2 after:content-[more]`">
                         </photo-description>
+                        <button class="absolute bottom-0 px-2 py-1 -translate-x-1/2 inset-x-1/2 min-w-max visually-hidden" @click="photo.expanded=true">read more...</button>
                         <span class="absolute text-sm bottom-2 left-8 text-gray-50/70" x-text="photo.date"></span>
                         <span class="absolute text-sm bottom-2 right-8 text-gray-50/70" x-text="photo.copyright" x-show="photo.copyright"></span>
                     </photo-card>
                 </template>
-                <button x-intersect.half="loadMore" class="px-4 py-2 mx-4 text-gray-900 bg-gray-100 rounded" x-cloak x-text="loading?'loading...':'Load More'">Load More</button>
+                <button x-intersect.half="loadMore" @click="loadMore" class="px-4 py-2 mx-4 text-gray-900 bg-gray-100 rounded" x-cloak x-text="loading?'loading...':'Load More'">Load More</button>
             </collection-wrapper>
         </template>
         <template x-if="page=='favourites'">
@@ -60,7 +62,7 @@
                         <img x-rias="photo.hdurl" class="object-cover w-full" alt="" :alt="photo.title" :loading="index>=3?'lazy':'eager'" width="3px" height="2px" sizes="90vw" @error="collection.splice(index,1)">
                         <div class="flex flex-row items-center justify-between px-8">
                             <h3 class="text-xl" x-text="photo.title"></h3>
-                            <button class="inline-flex items-center px-2 py-1 transition duration-700 border rounded-md max-w-1/2 border-gray-50 gap-x-1" @click="$store.favourites.toggle(photo)" :class="isLiked(photo)?'bg-gray-50 text-gray-900':'bg-transparent text-gray-50'"">
+                            <button class="inline-flex items-center px-2 py-1 transition duration-700 border rounded-md max-w-1/2 border-gray-50 gap-x-1 focus-visible:bg-blue-300" @click="$store.favourites.toggle(photo)" :class="isLiked(photo)?'bg-gray-50 text-gray-900':'bg-transparent text-gray-50'"">
                                 <svg class="flex-none w-4 h-4 transition-colors duration-700 icon" :class="isLiked(photo)?'text-pink-700':'text-gray-50'">
                                     <use :href="isLiked(photo)?'#icon-heart':'#icon-heart-outline'"></use>
                                 </svg>
@@ -69,6 +71,7 @@
                         </div>
                         <photo-description class="block px-8 prose" @click="photo.expanded=true" x-text="photo.explanation" :class="photo.expanded?'':`line-clamp-2 after:content-[more]`">
                         </photo-description>
+                        <button class="absolute bottom-0 px-2 py-1 -translate-x-1/2 inset-x-1/2 min-w-max visually-hidden" @click="photo.expanded=true">read more...</button>
                         <span class="absolute text-sm bottom-2 left-8 text-gray-50/70" x-text="photo.date"></span>
                         <span class="absolute text-sm bottom-2 right-8 text-gray-50/70" x-text="photo.copyright" x-show="photo.copyright"></span>
                     </photo-card>

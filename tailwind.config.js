@@ -3,13 +3,6 @@ const colors = require('tailwindcss/colors')
 
 module.exports = {
   mode: 'jit',
-  purge: {
-    mode: "all",
-    content: ["./**/*.liquid"],
-    options: {
-      whitelist: [],
-    },
-  },
   darkMode: 'media',
   theme: {
     container: {

@@ -6,7 +6,8 @@ export async function fetchAPOD(count=10){
         let data = (await response.json()).filter(i=>i.media_type=='image')
         return data
     } catch(e) {
-        return {error:e}
+        console.log(e)
+        return []
     }
 }
 
