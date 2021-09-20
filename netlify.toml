@@ -1,6 +1,6 @@
 [[redirects]]
   from = "/images/test/:query"
-  to = "/style.css?q=:query"
+  to = "/:query"
   status = 200
 
 [[redirects]]
