@@ -1,4 +1,9 @@
 [[redirects]]
+  from = "/images/test/:query"
+  to = "/style.css?q=:query"
+  status = 200
+
+[[redirects]]
   from = "/images/:image"
   to = "https://res.cloudinary.com/dmaoqyvwt/image/fetch/:image"
   status = 200
