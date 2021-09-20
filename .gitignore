@@ -1,6 +1,7 @@
 node_modules
 lighthouse.html
 _redirects
+.vscode
 
 # Local Netlify folder
 .netlify
