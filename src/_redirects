@@ -1,3 +1,0 @@
-/images/:image https://res.cloudinary.com/dmaoqyvwt/image/fetch/:image 200
-
-/* /index.html 200
