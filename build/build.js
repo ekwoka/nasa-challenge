@@ -1,4 +1,4 @@
-import Alpine from 'alpinejs'
+import Alpine from 'alpinejs/src'
 import Plugins from './plugins.js'
 import Data from './data.js'
 import Stores from './stores.js'
