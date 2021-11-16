@@ -31,7 +31,7 @@
         <p class="text-center">Explore the final frontier! Powered by AlpineJS and TailwindCSS</p>
     </hero-space>
     <h2 class="px-8 pt-8 text-lg font-bold capitalize" x-text="page" x-cloak x-show="page!='main'"></h2>
-        <template x-if="page=='main'">
+        <template x-route="main">
             <collection-wrapper class="flex flex-col w-full">
                 <template x-for="(photo,index) in collection" :key="photo.title">
                     <photo-card class="relative flex flex-col py-8 shadow-md gap-y-2">
@@ -55,7 +55,7 @@
                 <button x-intersect.half="loadMore" @click="loadMore" class="px-4 py-2 mx-4 text-gray-900 bg-gray-100 rounded" x-cloak x-text="loading?'loading...':'Load More'">Load More</button>
             </collection-wrapper>
         </template>
-        <template x-if="page=='favourites'">
+        <template x-route="favourites">
             <favourites-wrapper class="flex flex-col w-full animate-slide-in-right">
                 <template x-for="(photo,index) in favouritesCollection" :key="photo.title">
                     <photo-card class="relative flex flex-col py-8 shadow-md gap-y-2">
